@@ -28,6 +28,9 @@ public partial class ClinicMvcdbfirstContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DevConnection");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Greek_100_CI_AI");
@@ -42,8 +45,6 @@ public partial class ClinicMvcdbfirstContext : DbContext
 
         modelBuilder.Entity<Doctor>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK_Dctors");
-
             entity.HasIndex(e => e.Specialty, "IX_Doctors_Specialty");
 
             entity.HasIndex(e => e.UserId, "IX_Doctors_UserId").IsUnique();
@@ -98,7 +99,7 @@ public partial class ClinicMvcdbfirstContext : DbContext
             entity.HasIndex(e => e.UserId, "IX_Patients_UserId").IsUnique();
 
             entity.Property(e => e.Amka)
-                .HasMaxLength(10)
+                .HasMaxLength(11)
                 .HasColumnName("AMKA");
             entity.Property(e => e.BloodType).HasMaxLength(5);
 
@@ -135,7 +136,7 @@ public partial class ClinicMvcdbfirstContext : DbContext
         {
             entity.HasIndex(e => e.Email, "IX_Users_Email").IsUnique();
 
-            entity.HasIndex(e => e.RoleId, "IX_Users_RoleId").IsUnique();
+            entity.HasIndex(e => e.RoleId, "IX_Users_RoleId");
 
             entity.HasIndex(e => e.Username, "IX_Users_Username").IsUnique();
 
@@ -145,8 +146,8 @@ public partial class ClinicMvcdbfirstContext : DbContext
             entity.Property(e => e.Password).HasMaxLength(50);
             entity.Property(e => e.Username).HasMaxLength(50);
 
-            entity.HasOne(d => d.Role).WithOne(p => p.User)
-                .HasForeignKey<User>(d => d.RoleId)
+            entity.HasOne(d => d.Role).WithMany(p => p.Users)
+                .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Users_Roles");
         });

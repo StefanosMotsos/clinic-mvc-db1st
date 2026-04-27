@@ -13,7 +13,7 @@ namespace ClinicApp.Repositories.PatientRepo
 
         Task<PaginatedResult<User>> GetPaginatedUsersPatientsAsync(int pageNumber, int pageSize);
 
-        Task<PaginatedResult<Patient>> GetPaginatedUsersPatientAsync(int pageNumber, int pageSize,
-            List<Expression<Func<User, bool>>> predicates);
+        Task<PaginatedResult<Patient>> GetPaginatedFilteredUsersPatientAsync(int pageNumber, int pageSize,
+            List<Expression<Func<Patient, bool>>> predicates);
     }
 }

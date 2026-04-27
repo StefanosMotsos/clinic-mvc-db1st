@@ -1,6 +1,7 @@
 using ClinicApp.Data;
 using ClinicApp.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace ClinicApp
 {
@@ -12,10 +13,17 @@ namespace ClinicApp
 
             var connString = builder.Configuration.GetConnectionString("DevConnection");
 
+            builder.Host.UseSerilog((hostingContext, configuration) =>
+            {
+                configuration.ReadFrom.Configuration(hostingContext.Configuration);
+            });
+
             builder.Services.AddDbContext<ClinicMvcdbfirstContext>(options =>
                 options.UseSqlServer(connString));
 
             builder.Services.AddRepositories();
+
+            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<Configuration.MapperConfig>());
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

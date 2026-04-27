@@ -46,7 +46,7 @@ namespace ClinicApp.Repositories.PatientRepo
             return new PaginatedResult<User>(usersWithRolePatient, totalRecords, pageNumber, pageSize);
         }
 
-        public async Task<PaginatedResult<Patient>> GetPaginatedUsersPatientAsync(int pageNumber, int pageSize, 
+        public async Task<PaginatedResult<Patient>> GetPaginatedFilteredUsersPatientAsync(int pageNumber, int pageSize,
             List<Expression<Func<Patient, bool>>> predicates)
         {
             IQueryable<Patient> query = _context.Patients;

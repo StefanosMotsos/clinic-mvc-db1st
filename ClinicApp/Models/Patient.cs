@@ -9,6 +9,8 @@ public partial class Patient
 
     public string Amka { get; set; } = null!;
 
+    public DateOnly DateOfBirth { get; set; }
+
     public string? BloodType { get; set; }
 
     public int UserId { get; set; }
