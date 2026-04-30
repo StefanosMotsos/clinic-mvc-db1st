@@ -5,6 +5,8 @@ using ClinicApp.Services;
 using ClinicApp.Services.DoctorService;
 using ClinicApp.Services.PatientService;
 using ClinicApp.Services.UserService.UserService;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -35,6 +37,24 @@ namespace ClinicApp
 
             builder.Services.AddRepositories();
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/User/Login";
+                    options.AccessDeniedPath = "/Home/AccessDenied";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                    options.SlidingExpiration = true;
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                });
+
+            builder.Services.AddAuthorizationBuilder()
+                .SetFallbackPolicy(new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build())
+                .AddPolicy("CanViewDoctors", policy => policy.RequireClaim("Capability", "INSERT_DOCTOR"))
+                .AddPolicy("CanInsertDoctor", policy => policy.RequireClaim("Capability", "INSERT_DOCTOR"));
+
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<Configuration.MapperConfig>());
 
             // Add services to the container.
@@ -53,9 +73,10 @@ namespace ClinicApp
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapStaticAssets();
+            app.MapStaticAssets().AllowAnonymous();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")

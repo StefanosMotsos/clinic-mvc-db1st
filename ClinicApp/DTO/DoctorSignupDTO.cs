@@ -34,6 +34,6 @@ namespace ClinicApp.DTO
 
         [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "FieldRequired")]
         [StringLength(50, MinimumLength = 10, ErrorMessage = "length 10-50")]
-        public string? phoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }

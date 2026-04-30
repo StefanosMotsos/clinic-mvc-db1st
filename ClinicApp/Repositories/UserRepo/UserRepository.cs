@@ -15,13 +15,15 @@ namespace ClinicApp.Repositories.UserRepo
         }
 
         public async Task<User?> GetUserByUsernameAsync(string username) =>
-            await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            await _context.Users
+            .Include(u => u.Role)
+            .FirstOrDefaultAsync(u => u.Username == username);
 
         public async Task<PaginatedResult<User>> GetUserAsync(int pageNumber, int pageSize,
             List<Expression<Func<User, bool>>> predicates)
         {
             int totalRecords;
-            IQueryable<User> query = _context.Users;
+            IQueryable<User> query = _context.Users.Include(u => u.Role);
 
             if (predicates != null && predicates.Count > 0)
             {

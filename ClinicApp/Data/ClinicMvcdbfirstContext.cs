@@ -143,7 +143,7 @@ public partial class ClinicMvcdbfirstContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(50);
             entity.Property(e => e.Firstname).HasMaxLength(50);
             entity.Property(e => e.Lastname).HasMaxLength(50);
-            entity.Property(e => e.Password).HasMaxLength(50);
+            entity.Property(e => e.Password).HasMaxLength(100);
             entity.Property(e => e.Username).HasMaxLength(50);
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
