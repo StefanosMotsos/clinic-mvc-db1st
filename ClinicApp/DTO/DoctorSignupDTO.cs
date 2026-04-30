@@ -4,35 +4,35 @@ namespace ClinicApp.DTO
 {
     public record DoctorSignupDTO
     {
-        [Required(ErrorMessage = "{0} is required")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "length 2-50")]
+        [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "FieldRequired")]
+        [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "InvalidLength")]
         public string? Username { get; set; }
 
-        [Required(ErrorMessage = "{0} is required")]
-        [RegularExpression(@"(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)(?=.*?\W)^.{8,}$", ErrorMessage = "password not meeting requirements")]
+        [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "FieldRequired")]
+        [RegularExpression(@"(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)(?=.*?\W)^.{8,}$", 
+            ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "InvalidPassword")]
         public string? Password { get; set; }
 
-        [Required(ErrorMessage = "{0} is required")]
-        [StringLength(50, ErrorMessage = "length up to 50")]
-        [EmailAddress(ErrorMessage = "invalid address")]
+        [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "FieldRequired")]
+        [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "InvalidLength")]
+        [EmailAddress(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "InvalidEmail")]
         public string? Email { get; set; }
 
-        [Required(ErrorMessage = "{0} is required")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "length 2-50")]
+        [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "FieldRequired")]
+        [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "InvalidLength")]
         public string? Firstname { get; set; }
 
-        [Required(ErrorMessage = "{0} is required")]
+        [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "FieldRequired")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "length 2-50")]
         public string? Lastname { get; set; }
 
-        [Required(ErrorMessage = "{0} is required")]
+        [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "FieldRequired")] 
         public int? RoleId { get; set; }
 
-        [Required(ErrorMessage = "{0} is required")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "length 2-100")]
+        [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "InvalidLength")]
         public string? Specialty { get; set; }
 
-        [Required(ErrorMessage = "{0} is required")]
+        [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "FieldRequired")]
         [StringLength(50, MinimumLength = 10, ErrorMessage = "length 10-50")]
         public string? phoneNumber { get; set; }
     }

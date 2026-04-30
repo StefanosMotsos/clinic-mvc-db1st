@@ -33,6 +33,7 @@ namespace ClinicApp.Repositories.PatientRepo
 
             var usersWithRolePatient = await _context.Users
                 .Include(u => u.Patient)
+                .Include(u => u.Role)
                 .Where(u => u.Patient != null)
                 .OrderBy(u => u.Id)
                 .Skip(skip)

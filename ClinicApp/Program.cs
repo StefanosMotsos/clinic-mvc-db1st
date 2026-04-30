@@ -1,5 +1,10 @@
 using ClinicApp.Data;
 using ClinicApp.Repositories;
+using ClinicApp.Security;
+using ClinicApp.Services;
+using ClinicApp.Services.DoctorService;
+using ClinicApp.Services.PatientService;
+using ClinicApp.Services.UserService.UserService;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -20,6 +25,13 @@ namespace ClinicApp
 
             builder.Services.AddDbContext<ClinicMvcdbfirstContext>(options =>
                 options.UseSqlServer(connString));
+
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IDoctorService, DoctorService>();
+            builder.Services.AddScoped<IPatientService, PatientService>();
+            builder.Services.AddScoped<IApplicationService, ApplicationService>();
+
+            builder.Services.AddSingleton<IEncryptionUtil, EncryptedUtil>();
 
             builder.Services.AddRepositories();
 

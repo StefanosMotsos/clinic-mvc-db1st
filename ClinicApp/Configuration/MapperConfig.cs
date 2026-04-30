@@ -14,6 +14,8 @@ namespace ClinicApp.Configuration
 
             CreateMap<DoctorSignupDTO, User>()
                 .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId!.Value));
+
+            CreateMap<DoctorSignupDTO, Doctor>();
         }
     }
 }
