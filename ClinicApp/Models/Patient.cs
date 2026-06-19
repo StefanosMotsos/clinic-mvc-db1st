@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClinicApp.Models;
 
-public partial class Patient
+public partial class Patient : BaseEntity
 {
     public int Id { get; set; }
 
@@ -14,6 +14,16 @@ public partial class Patient
     public string? BloodType { get; set; }
 
     public int UserId { get; set; }
+
+    public DateTime InsertedAt { get; set; }
+
+    public DateTime ModifiedAt { get; set; }
+
+    public bool IsDeleted { get; set; }
+
+    public DateTime? DeletedAt { get; set; }
+
+    public Guid Uuid { get; set; }
 
     public virtual User User { get; set; } = null!;
 

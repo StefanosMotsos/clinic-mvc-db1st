@@ -29,7 +29,12 @@ public partial class ClinicMvcdbfirstContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DevConnection");
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer("Name=ConnectionStrings:DevConnection");
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,10 +42,28 @@ public partial class ClinicMvcdbfirstContext : DbContext
 
         modelBuilder.Entity<Capability>(entity =>
         {
+            entity.HasIndex(e => e.Name, "IX_Capabilities_Name");
+
             entity.HasIndex(e => e.Name, "UQ_Capabilities_Name").IsUnique();
 
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.Name).HasMaxLength(100);
+
+            entity.HasMany(d => d.Roles).WithMany(p => p.Capabilities)
+                .UsingEntity<Dictionary<string, object>>(
+                    "RolesCapability",
+                    r => r.HasOne<Role>().WithMany()
+                        .HasForeignKey("RolesId")
+                        .HasConstraintName("FK_RolesCapabilities_Roles"),
+                    l => l.HasOne<Capability>().WithMany()
+                        .HasForeignKey("CapabilitiesId")
+                        .HasConstraintName("FK_RolesCapabilities_Capabilities"),
+                    j =>
+                    {
+                        j.HasKey("CapabilitiesId", "RolesId");
+                        j.ToTable("RolesCapabilities");
+                        j.HasIndex(new[] { "CapabilitiesId" }, "IX_RolesCapabilities_CapabilityId");
+                    });
         });
 
         modelBuilder.Entity<Doctor>(entity =>
@@ -49,13 +72,17 @@ public partial class ClinicMvcdbfirstContext : DbContext
 
             entity.HasIndex(e => e.UserId, "IX_Doctors_UserId").IsUnique();
 
-            entity.Property(e => e.PhoneNumber).HasMaxLength(50);
-            entity.Property(e => e.Specialty).HasMaxLength(100);
+            entity.HasIndex(e => e.Uuid, "IX_Doctors_Uuid").IsUnique();
+
+            entity.Property(e => e.InsertedAt).HasDefaultValueSql("(sysutcdatetime())", "DF_Doctors_InsertedAt");
+            entity.Property(e => e.ModifiedAt).HasDefaultValueSql("(sysutcdatetime())", "DF_Doctors_ModifiedAt");
+            entity.Property(e => e.PhoneNumber).HasMaxLength(20);
+            entity.Property(e => e.Specialty).HasMaxLength(50);
+            entity.Property(e => e.Uuid).HasDefaultValueSql("(newid())", "DF_Doctors_Uuid");
 
             entity.HasOne(d => d.User).WithOne(p => p.Doctor)
                 .HasForeignKey<Doctor>(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Doctors_Users");
+                .HasConstraintName("FK_Doctors_UserId");
         });
 
         modelBuilder.Entity<MedicalProgram>(entity =>
@@ -64,29 +91,27 @@ public partial class ClinicMvcdbfirstContext : DbContext
 
             entity.HasIndex(e => e.DoctorId, "IX_MedicalPrograms_DoctorId");
 
-            entity.Property(e => e.Description).HasMaxLength(50);
+            entity.Property(e => e.Description).HasMaxLength(255);
 
             entity.HasOne(d => d.Doctor).WithMany(p => p.MedicalPrograms)
                 .HasForeignKey(d => d.DoctorId)
-                .HasConstraintName("FK_MedicalPrograms_Doctors");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Programs_DoctorId");
 
             entity.HasMany(d => d.Patients).WithMany(p => p.Programs)
                 .UsingEntity<Dictionary<string, object>>(
-                    "ProgramsPatient",
+                    "PatientsProgram",
                     r => r.HasOne<Patient>().WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_ProgramsPatients_Patients"),
+                        .HasForeignKey("PatientsId")
+                        .HasConstraintName("FK_PatientsPrograms_Patients"),
                     l => l.HasOne<MedicalProgram>().WithMany()
-                        .HasForeignKey("ProgramId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_ProgramsPatients_MedicalPrograms"),
+                        .HasForeignKey("ProgramsId")
+                        .HasConstraintName("FK_PatientsPrograms_MedicalPrograms"),
                     j =>
                     {
-                        j.HasKey("ProgramId", "PatientId");
-                        j.ToTable("ProgramsPatients");
-                        j.HasIndex(new[] { "PatientId" }, "IX_ProgramsPatients_PatientId");
-                        j.HasIndex(new[] { "ProgramId" }, "IX_ProgramsPatients_ProgramId");
+                        j.HasKey("ProgramsId", "PatientsId");
+                        j.ToTable("PatientsPrograms");
+                        j.HasIndex(new[] { "PatientsId" }, "IX_PatientsPrograms_PatientsId");
                     });
         });
 
@@ -98,38 +123,28 @@ public partial class ClinicMvcdbfirstContext : DbContext
 
             entity.HasIndex(e => e.UserId, "IX_Patients_UserId").IsUnique();
 
+            entity.HasIndex(e => e.Uuid, "IX_Patients_Uuid").IsUnique();
+
             entity.Property(e => e.Amka)
                 .HasMaxLength(11)
                 .HasColumnName("AMKA");
-            entity.Property(e => e.BloodType).HasMaxLength(5);
+            entity.Property(e => e.BloodType).HasMaxLength(20);
+            entity.Property(e => e.InsertedAt).HasDefaultValueSql("(sysutcdatetime())", "DF_Patients_InsertedAt");
+            entity.Property(e => e.ModifiedAt).HasDefaultValueSql("(sysutcdatetime())", "DF_Patients_ModifiedAt");
+            entity.Property(e => e.Uuid).HasDefaultValueSql("(newid())", "DF_Patients_Uuid");
 
             entity.HasOne(d => d.User).WithOne(p => p.Patient)
                 .HasForeignKey<Patient>(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Patients_Users");
+                .HasConstraintName("FK_Patients_UserId");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
+            entity.HasIndex(e => e.Name, "IX_Roles_Name");
+
             entity.HasIndex(e => e.Name, "UQ_Roles_Name").IsUnique();
 
             entity.Property(e => e.Name).HasMaxLength(50);
-
-            entity.HasMany(d => d.Capabilities).WithMany(p => p.Roles)
-                .UsingEntity<Dictionary<string, object>>(
-                    "RolesCapability",
-                    r => r.HasOne<Capability>().WithMany()
-                        .HasForeignKey("CapabilityId")
-                        .HasConstraintName("FK_RolesCapabilities_Capabilities"),
-                    l => l.HasOne<Role>().WithMany()
-                        .HasForeignKey("RoleId")
-                        .HasConstraintName("FK_RolesCapabilities_Roles"),
-                    j =>
-                    {
-                        j.HasKey("RoleId", "CapabilityId");
-                        j.ToTable("RolesCapabilities");
-                        j.HasIndex(new[] { "CapabilityId" }, "IX_RolesCapabilities_CapabilityId");
-                    });
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -140,16 +155,21 @@ public partial class ClinicMvcdbfirstContext : DbContext
 
             entity.HasIndex(e => e.Username, "IX_Users_Username").IsUnique();
 
+            entity.HasIndex(e => e.Uuid, "IX_Users_Uuid").IsUnique();
+
             entity.Property(e => e.Email).HasMaxLength(50);
             entity.Property(e => e.Firstname).HasMaxLength(50);
+            entity.Property(e => e.InsertedAt).HasDefaultValueSql("(sysutcdatetime())", "DF_Users_InsertedAt");
             entity.Property(e => e.Lastname).HasMaxLength(50);
+            entity.Property(e => e.ModifiedAt).HasDefaultValueSql("(sysutcdatetime())", "DF_Users_ModifiedAt");
             entity.Property(e => e.Password).HasMaxLength(100);
             entity.Property(e => e.Username).HasMaxLength(50);
+            entity.Property(e => e.Uuid).HasDefaultValueSql("(newid())", "DF_Users_Uuid");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Users_Roles");
+                .HasConstraintName("FK_Users_RoleId");
         });
 
         OnModelCreatingPartial(modelBuilder);

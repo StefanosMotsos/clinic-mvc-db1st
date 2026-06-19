@@ -2,7 +2,7 @@
 using ClinicApp.DTO;
 using ClinicApp.Exceptions;
 using ClinicApp.Models;
-using ClinicApp.Repositories.UoW;
+using ClinicApp.Repositories;
 using ClinicApp.Security;
 
 namespace ClinicApp.Services.DoctorService

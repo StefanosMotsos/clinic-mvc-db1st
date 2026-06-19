@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ClinicApp.Core;
 using ClinicApp.DTO;
-using ClinicApp.Repositories.UoW;
+using ClinicApp.Repositories;
 using Serilog;
 
 namespace ClinicApp.Services.PatientService

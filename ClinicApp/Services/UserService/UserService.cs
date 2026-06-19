@@ -4,7 +4,7 @@ using ClinicApp.Core.Filters;
 using ClinicApp.DTO;
 using ClinicApp.Exceptions;
 using ClinicApp.Models;
-using ClinicApp.Repositories.UoW;
+using ClinicApp.Repositories;
 using ClinicApp.Security;
 using System.Linq.Expressions;
 using System.Runtime.Versioning;
