@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace ClinicApp.Repositories.PatientRepo
 {
-    public class PatientRepository : BaseRepository<Patient>, IPatientRepository
+    public class PatientRepository : BaseAuditRepository<Patient>, IPatientRepository
     {
         public PatientRepository(ClinicMvcdbfirstContext context) : base(context) { }
 
@@ -20,11 +20,17 @@ namespace ClinicApp.Repositories.PatientRepo
 
             return programs;
         }
-        public async Task<Patient?> GetAMKAAsync(string? amka)
+        public async Task<Patient?> GetPatientByAMKAAsync(string? amka)
         {
             return await _context.Patients
                 .Where(p => p.Amka == amka)
                 .SingleOrDefaultAsync();
+        }
+
+        public async Task<Patient?> GetPatientByUserId(int userId)
+        {
+            return await _dbSet
+                .Include(p => p.User).FirstOrDefaultAsync(p => p.UserId == userId);
         }
 
         public async Task<PaginatedResult<User>> GetPaginatedUsersPatientsAsync(int pageNumber, int pageSize)
@@ -47,25 +53,27 @@ namespace ClinicApp.Repositories.PatientRepo
             return new PaginatedResult<User>(usersWithRolePatient, totalRecords, pageNumber, pageSize);
         }
 
-        public async Task<PaginatedResult<Patient>> GetPaginatedFilteredUsersPatientAsync(int pageNumber, int pageSize,
+        public async Task<PaginatedResult<Patient>> GetPaginatedFilteredPatientAsync(int pageNumber, int pageSize,
             List<Expression<Func<Patient, bool>>> predicates)
         {
-            IQueryable<Patient> query = _context.Patients;
+            int totalRecords;
+            IQueryable<Patient> query = _context.Patients
+                                            .Include(p => p.User)
+                                            .ThenInclude(u => u.Role);
 
             if (predicates != null && predicates.Count > 0)
             {
-                foreach (var predicate in predicates)
-                {
+                foreach(var predicate in predicates) 
+                { 
                     query = query.Where(predicate);
                 }
             }
 
-            int totalRecords = await query.CountAsync();
-
+            totalRecords = await query.CountAsync();
             int skip = (pageNumber - 1) * pageSize;
 
             var data = await query
-                .OrderBy(u => u.Id)
+                .OrderBy(p => p.Id)
                 .Skip(skip)
                 .Take(pageSize)
                 .ToListAsync();
@@ -77,7 +85,11 @@ namespace ClinicApp.Repositories.PatientRepo
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };
+        }
 
+        public override async Task<Patient?> GetByUuidAsync(Guid uuid)
+        {
+            return await _dbSet.Include(p => p.User).FirstOrDefaultAsync(d => d.Uuid == uuid);
         }
     }
 }

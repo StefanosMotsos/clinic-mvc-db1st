@@ -1,6 +1,4 @@
-﻿using ClinicApp.Repositories.UoW;
-
-namespace ClinicApp.Repositories
+﻿namespace ClinicApp.Repositories
 {
     public static class RepositoriesDIExtensions
     {

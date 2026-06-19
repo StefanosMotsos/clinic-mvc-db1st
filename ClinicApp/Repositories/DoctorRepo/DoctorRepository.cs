@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace ClinicApp.Repositories.DoctorRepo
 {
-    public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
+    public class DoctorRepository : BaseAuditRepository<Doctor>, IDoctorRepository
     {
         public DoctorRepository(ClinicMvcdbfirstContext context) : base(context) { }
 
@@ -32,14 +32,21 @@ namespace ClinicApp.Repositories.DoctorRepo
             return userDoctor;
         }
 
-        public async Task<PaginatedResult<User>> GetDoctorsAsync(int pageNumber, int pageSize, 
-            List<Expression<Func<User, bool>>> predicates)
+        public async Task<Doctor?> GetDoctorByUserIdAsync(int userId)
         {
+            Doctor? doctor = await _dbSet
+                .Include(d => d.User)
+                .FirstOrDefaultAsync(d => d.UserId == userId);
+            return doctor;
+        }
 
+        public async Task<PaginatedResult<Doctor>> GetPaginatedFilteredDoctorsAsync(int pageNumber, int pageSize, 
+            List<Expression<Func<Doctor, bool>>> predicates)
+        {
             int totalRecords;
-            IQueryable<User> query = _context.Users
-                .Include(u => u.Doctor)
-                .Where(u => u.Doctor != null);
+            IQueryable<Doctor> query = _context.Doctors
+                                            .Include(d => d.User)
+                                            .ThenInclude(u => u.Role);
 
             if (predicates != null && predicates.Count > 0)
             {
@@ -48,16 +55,17 @@ namespace ClinicApp.Repositories.DoctorRepo
                     query = query.Where(predicate);
                 }
             }
+
             totalRecords = await query.CountAsync();
             int skip = (pageNumber - 1) * pageSize;
 
             var data = await query
-                .OrderBy(u => u.Id)
+                .OrderBy(d => d.Id)
                 .Skip(skip)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return new PaginatedResult<User>()
+            return new PaginatedResult<Doctor>
             {
                 Data = data,
                 TotalRecords = totalRecords,
@@ -65,5 +73,8 @@ namespace ClinicApp.Repositories.DoctorRepo
                 PageSize = pageSize
             };
         }
+
+        public override async Task<Doctor?> GetByUuidAsync(Guid uuid) =>
+            await _dbSet.Include(d => d.User).FirstOrDefaultAsync(d => d.Uuid == uuid);
     }
 }

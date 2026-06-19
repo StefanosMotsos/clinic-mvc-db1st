@@ -5,11 +5,13 @@ using System.Linq.Expressions;
 
 namespace ClinicApp.Repositories.UserRepo
 {
-    public interface IUserRepository : IBaseRepository<User>
+    public interface IUserRepository : IBaseAuditRepository<User>
     {
         Task<User?> GetUserByUsernameAsync(string username);
 
         Task<PaginatedResult<User>> GetUserAsync(int pageNumber, int pageSize,
             List<Expression<Func<User, bool>>> predicates);
+
+        Task<User?> GetUserByEmailAsync(string email);
     }
 }

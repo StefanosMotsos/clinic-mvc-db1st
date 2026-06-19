@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClinicApp.Repositories.UserRepo
 {
-    public class UserRepository : BaseRepository<User>, IUserRepository
+    public class UserRepository : BaseAuditRepository<User>, IUserRepository
     {
 
         public UserRepository(ClinicMvcdbfirstContext context) : base(context)
@@ -18,6 +18,11 @@ namespace ClinicApp.Repositories.UserRepo
             await _context.Users
             .Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.Username == username);
+
+        public async Task<User?> GetUserByEmailAsync(string email) =>
+            await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email == email);
 
         public async Task<PaginatedResult<User>> GetUserAsync(int pageNumber, int pageSize,
             List<Expression<Func<User, bool>>> predicates)
@@ -50,5 +55,8 @@ namespace ClinicApp.Repositories.UserRepo
             };
 
         }
+
+        public override async Task<User?> GetByUuidAsync(Guid uuid) =>
+            await _dbSet.Include(u => u.Role).FirstOrDefaultAsync(u => u.Uuid == uuid);
     }
 }
