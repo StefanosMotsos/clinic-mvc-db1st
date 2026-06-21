@@ -11,6 +11,8 @@ public partial class MedicalProgram
 
     public int DoctorId { get; set; }
 
+    public string Title { get; set; } = null!;
+
     public virtual Doctor Doctor { get; set; } = null!;
 
     public virtual ICollection<Patient> Patients { get; set; } = new List<Patient>();

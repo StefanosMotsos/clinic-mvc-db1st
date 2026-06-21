@@ -179,6 +179,7 @@ GO
 -- ============================================
 CREATE TABLE [dbo].[MedicalPrograms] (
     [Id]            INT             IDENTITY(1, 1) NOT NULL,
+    [Title]         NVARCHAR(100)   NOT NULL,
     [Description]   NVARCHAR(255)   NOT NULL,
     [DoctorId]      INT             NOT NULL,
     CONSTRAINT [PK_MedicalPrograms] PRIMARY KEY CLUSTERED ([Id] ASC),
@@ -195,6 +196,9 @@ GO
 
 CREATE NONCLUSTERED INDEX [IX_MedicalPrograms_DoctorId]
     ON [dbo].[MedicalPrograms]([DoctorId] ASC);
+GO
+CREATE NONCLUSTERED INDEX [IX_MedicalPrograms_Title]
+    ON [dbo].[MedicalPrograms]([Title] ASC);
 GO
 
 -- ============================================
