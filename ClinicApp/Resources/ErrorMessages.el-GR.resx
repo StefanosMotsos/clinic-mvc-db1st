@@ -117,19 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BadCredentials" xml:space="preserve">
-    <value>Λανθασμένα Διαπιστευτήρια</value>
-  </data>
-  <data name="FieldRequired" xml:space="preserve">
-    <value>Το πεδίο {0} είναι υποχρεωτικό.</value>
-  </data>
-  <data name="InvalidEmail" xml:space="preserve">
-    <value>Η διεύθυνση email δεν είναι έγκυρη.</value>
-  </data>
-  <data name="InvalidLength" xml:space="preserve">
-    <value>Το πεδίο {0} πρέπει να είναι από {2} έως {1} χαρακτήρες.</value>
-  </data>
-  <data name="InvalidPassword" xml:space="preserve">
-    <value>Ο κωδικός πρέπει να περιέχει τουλάχιστον ένα κεφαλαίο, ένα πεζό, έναν αριθμό και έναν ειδικό χαρακτήρα.</value>
-  </data>
+	    <!-- Data Annotations -->
+	    <data name="Required" xml:space="preserve">
+      <value>Το πεδίο {0} είναι υποχρεωτικό.</value>
+    </data>
+	    <data name="StringLength" xml:space="preserve">
+      <value>Το πεδίο {0} πρέπει να είναι μεταξύ {2} και {1} χαρακτήρων.</value>
+    </data>
+	    <data name="EmailAddress" xml:space="preserve">
+      <value>Το πεδίο {0} πρέπει να είναι έγκυρη διεύθυνση email.</value>
+    </data>
+	    <data name="RegularExpression" xml:space="preserve">
+      <value>Το πεδίο {0} πρέπει να περιέχει τουλάχιστον ένα κεφαλαίο, ένα πεζό, έναν αριθμό και έναν ειδικό χαρακτήρα, και να έχει τουλάχιστον 8 χαρακτήρες.</value>
+    </data>
+	    <data name="Range" xml:space="preserve">
+      <value>Το πεδίο {0} πρέπει να είναι μεταξύ {1} και {2}.</value>
+    </data>
+
+	    <!-- Exceptions -->
+	    <data name="NotFound" xml:space="preserve">
+      <value>Το/Ο {0} δεν βρέθηκε.</value>
+    </data>
+	    <data name="AlreadyExists" xml:space="preserve">
+      <value>Το/Ο {0} υπάρχει ήδη.</value>
+    </data>
+	    <data name="NotAuthorized" xml:space="preserve">
+      <value>Δεν είστε εξουσιοδοτημένοι για αυτή την ενέργεια.</value>
+    </data>
+	    <data name="Forbidden" xml:space="preserve">
+      <value>Δεν έχετε άδεια για αυτή την ενέργεια.</value>
+    </data>
+	    <data name="InvalidArgument" xml:space="preserve">
+      <value>Μη έγκυρο όρισμα για {0}.</value>
+    </data>
+	    <data name="ValidationError" xml:space="preserve">
+      <value>Αποτυχία επικύρωσης για {0}.</value>
+    </data>
+	    <data name="BadCredentials" xml:space="preserve">
+      <value>Λάθος όνομα χρήστη ή κωδικός.</value>
+    </data>
+	    <data name="InternalServerError" xml:space="preserve">
+      <value>Απροσδόκητο σφάλμα. Παρακαλώ δοκιμάστε αργότερα.</value>
+    </data>
 </root>

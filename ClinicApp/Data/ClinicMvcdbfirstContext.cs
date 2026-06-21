@@ -29,12 +29,8 @@ public partial class ClinicMvcdbfirstContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseSqlServer("Name=ConnectionStrings:DevConnection");
-        }
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=localhost\\sqlexpress;Database=ClinicMVCDBFirst;User=stef;Password=12345;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -91,7 +87,10 @@ public partial class ClinicMvcdbfirstContext : DbContext
 
             entity.HasIndex(e => e.DoctorId, "IX_MedicalPrograms_DoctorId");
 
+            entity.HasIndex(e => e.Title, "IX_MedicalPrograms_Title");
+
             entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.Title).HasMaxLength(100);
 
             entity.HasOne(d => d.Doctor).WithMany(p => p.MedicalPrograms)
                 .HasForeignKey(d => d.DoctorId)
