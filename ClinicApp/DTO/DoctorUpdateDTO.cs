@@ -2,13 +2,12 @@
 
 namespace ClinicApp.DTO
 {
-    public record DoctorSignupDTO
+    public record DoctorUpdateDTO
     {
         [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "Required")]
         [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "StringLength")]
         public string? Username { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "Required")]
         [RegularExpression(@"(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)(?=.*?\W)^.{8,}$",
             ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "RegularExpression")]
         public string? Password { get; set; }

@@ -2,7 +2,7 @@
 
 namespace ClinicApp.DTO
 {
-    public record DoctorSignupDTO
+    public record StaffSignupDTO
     {
         [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "Required")]
         [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "StringLength")]
@@ -27,11 +27,6 @@ namespace ClinicApp.DTO
         public string? Lastname { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "Required")]
-        [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "StringLength")]
-        public string? Specialty { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "Required")]
-        [StringLength(20, MinimumLength = 10, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "StringLength")]
-        public string? PhoneNumber { get; set; }
+        public int? RoleId { get; set; }
     }
 }

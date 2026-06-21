@@ -2,7 +2,7 @@
 
 namespace ClinicApp.DTO
 {
-    public record DoctorSignupDTO
+    public record PatientSignupDTO
     {
         [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "Required")]
         [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "StringLength")]
@@ -27,11 +27,14 @@ namespace ClinicApp.DTO
         public string? Lastname { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "Required")]
-        [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "StringLength")]
-        public string? Specialty { get; set; }
+        [StringLength(11, MinimumLength = 11, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "StringLength")]
+        public string? Amka { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "Required")]
-        [StringLength(20, MinimumLength = 10, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "StringLength")]
-        public string? PhoneNumber { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? DateOfBirth { get; set; }
+
+        [StringLength(20, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "StringLength")]
+        public string? BloodType { get; set; }
     }
 }
