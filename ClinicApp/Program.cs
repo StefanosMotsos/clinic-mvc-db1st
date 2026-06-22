@@ -51,9 +51,7 @@ namespace ClinicApp
             builder.Services.AddAuthorizationBuilder()
                 .SetFallbackPolicy(new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
-                    .Build())
-                .AddPolicy("CanViewDoctors", policy => policy.RequireClaim("Capability", "INSERT_DOCTOR"))
-                .AddPolicy("CanInsertDoctor", policy => policy.RequireClaim("Capability", "INSERT_DOCTOR"));
+                    .Build());
 
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<Configuration.MapperConfig>());
 

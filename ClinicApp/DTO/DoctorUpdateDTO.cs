@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ClinicApp.Resources;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClinicApp.DTO
 {
@@ -8,6 +9,8 @@ namespace ClinicApp.DTO
         [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "StringLength")]
         public string? Username { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ErrorMessages),
+            ErrorMessageResourceName = "Required")]
         [RegularExpression(@"(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)(?=.*?\W)^.{8,}$",
             ErrorMessageResourceType = typeof(Resources.ErrorMessages), ErrorMessageResourceName = "RegularExpression")]
         public string? Password { get; set; }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClinicApp.Models;
 
-public partial class Doctor
+public partial class Doctor : BaseEntity
 {
     public int Id { get; set; }
 
