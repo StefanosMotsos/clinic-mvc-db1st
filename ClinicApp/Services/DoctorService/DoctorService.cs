@@ -58,7 +58,7 @@ namespace ClinicApp.Services.DoctorService
                 await _unitOfWork.UserRepository.AddAsync(user);
                 await _unitOfWork.SaveAsync();
 
-                _logger.LogInformation("Doctor {Username} was registered successfully!", user.Username);
+                _logger.LogInformation("Doctor with {Username} was registered successfully!", user.Username);
                 return _mapper.Map<DoctorReadOnlyDTO>(doctor);
             } catch (Exception ex)
             {
@@ -93,7 +93,7 @@ namespace ClinicApp.Services.DoctorService
                     User? existingEmail = await _unitOfWork.UserRepository.GetUserByEmailAsync(dto.Email!);
                     if (existingEmail != null)
                     {
-                        _logger.LogWarning("Employee with email {Email} already exists", dto.Email);
+                        _logger.LogWarning("Doctor with email {Email} already exists", dto.Email);
                         throw new EntityAlreadyExistsException("Email", ErrorMessages.AlreadyExists);
                     }
                 }
