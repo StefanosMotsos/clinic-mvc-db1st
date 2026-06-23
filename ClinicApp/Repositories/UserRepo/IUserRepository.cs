@@ -9,7 +9,7 @@ namespace ClinicApp.Repositories.UserRepo
     {
         Task<User?> GetUserByUsernameAsync(string username);
 
-        Task<PaginatedResult<User>> GetUserAsync(int pageNumber, int pageSize,
+        Task<PaginatedResult<User>> GetUsersAsync(int pageNumber, int pageSize,
             List<Expression<Func<User, bool>>> predicates);
 
         Task<User?> GetUserByEmailAsync(string email);

@@ -16,7 +16,7 @@ namespace ClinicApp.Repositories.UserRepo
 
         public async Task<User?> GetUserByUsernameAsync(string username) =>
             await _context.Users
-            .Include(u => u.Role)
+            .Include(u => u.Role).ThenInclude(r => r.Capabilities)
             .FirstOrDefaultAsync(u => u.Username == username);
 
         public async Task<User?> GetUserByEmailAsync(string email) =>
@@ -24,7 +24,7 @@ namespace ClinicApp.Repositories.UserRepo
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Email == email);
 
-        public async Task<PaginatedResult<User>> GetUserAsync(int pageNumber, int pageSize,
+        public async Task<PaginatedResult<User>> GetUsersAsync(int pageNumber, int pageSize,
             List<Expression<Func<User, bool>>> predicates)
         {
             int totalRecords;
