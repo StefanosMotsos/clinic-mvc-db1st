@@ -19,7 +19,7 @@ namespace ClinicApp.Controllers
                 return View();
             }
 
-            return RedirectToAction("Index", "User");
+            return RedirectToAction("Index", "Doctor");
         }
 
         [HttpGet]

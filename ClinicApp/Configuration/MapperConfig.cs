@@ -21,6 +21,8 @@ namespace ClinicApp.Configuration
                 .ForMember(dest => dest.Lastname, opt => opt.MapFrom(src => src.User.Lastname))
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.User.Role.Name));
 
+            CreateMap<DoctorReadOnlyDTO, DoctorUpdateDTO>();
+
             CreateMap<PatientSignupDTO, User>();
             CreateMap<PatientSignupDTO, Patient>();
             CreateMap<PatientUpdateDTO, User>();

@@ -1,0 +1,45 @@
+﻿@using ClinicApp.Core
+@model ClinicApp.DTO.DoctorReadOnlyDTO
+
+@{
+    ViewData["Title"] = "Doctor Details";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border-primary mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">@Model.Firstname @Model.Lastname</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Username:</strong> @Model.Username</p>
+                    <p><strong>Email:</strong> @Model.Email</p>
+                    <p><strong>Specialty:</strong> @Model.Specialty</p>
+                    <p><strong>Phone:</strong> @Model.PhoneNumber</p>
+                    <p><strong>Role:</strong> @Model.RoleName</p>
+                    <p><strong>Status:</strong> @(Model.IsDeleted ? "Inactive" : "Active")</p>
+                </div>
+                <div class="card-footer">
+                    @if (User.IsInRole("ADMIN") || User.IsInRole("DOCTOR"))
+                    {
+                        <a asp-controller="Doctor" asp-action="Edit" class="btn btn-warning">Edit Profile</a>
+                    }
+                    <a asp-controller="Doctor" asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewData["ErrorArray"] is not null)
+    {
+        var errorArray = ViewData["ErrorArray"] as List<Error>;
+        if (errorArray != null)
+        {
+            foreach (var error in errorArray)
+            {
+                <div class="alert alert-danger">@error.Message</div>
+            }
+        }
+    }
+</div>

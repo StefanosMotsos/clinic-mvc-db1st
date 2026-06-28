@@ -1,132 +1,107 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using ClinicApp.Core
+@model ClinicApp.Core.PaginatedResult<ClinicApp.DTO.DoctorReadOnlyDTO>
+
 @{
-    ViewData["Title"] = "Doctor Dashboard";
+    ViewData["Title"] = "Doctors";
 }
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">Doctor Dashboard</h1>
-        <div class="text-muted">Welcome back, Dr. @User?.Identity!.Name!</div>
+<h2 class="mb-4">Doctors</h2>
+
+<form asp-controller="Doctor" asp-action="Index" method="get" class="row mb-4">
+    <div class="col-md-2">
+        <input type="text" class="form-control" name="filters.Username" placeholder="Username" />
     </div>
-
-    <!-- Doctor Stats -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-4">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="h6 font-weight-bold">My Medical Programs</div>
-                            <div class="h4 font-weight-bold">6</div>
-                        </div>
-                        <i class="fas fa-book fa-2x opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="h6 font-weight-bold">Total Patients</div>
-                            <div class="h4 font-weight-bold">142</div>
-                        </div>
-                        <i class="fas fa-user-injured fa-2x opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="h6 font-weight-bold">Pending Results</div>
-                            <div class="h4 font-weight-bold">23</div>
-                        </div>
-                        <i class="fas fa-clipboard-check fa-2x opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card bg-warning text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="h6 font-weight-bold">Today's Appointments</div>
-                            <div class="h4 font-weight-bold">3</div>
-                        </div>
-                        <i class="fas fa-clock fa-2x opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="col-md-2">
+        <input type="text" class="form-control" name="filters.Firstname" placeholder="Firstname" />
     </div>
-
-    <div class="row">
-        <!-- Today's Schedule -->
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow">
-                <div class="card-header bg-white">
-                    <h6 class="m-0 font-weight-bold">Today's Schedule</h6>
-                </div>
-                <div class="card-body">
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>General Check-ups</strong>
-                                <div class="text-muted small">9:00 AM - 10:30 AM</div>
-                            </div>
-                            <span class="badge bg-primary">Room 201</span>
-                        </div>
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>Minor Surgery</strong>
-                                <div class="text-muted small">11:00 AM - 12:30 PM</div>
-                            </div>
-                            <span class="badge bg-success">Lab B</span>
-                        </div>
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>Patient Rounds - Oncology Ward</strong>
-                                <div class="text-muted small">2:00 PM - 3:30 PM</div>
-                            </div>
-                            <span class="badge bg-info">Room 305</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow">
-                <div class="card-header bg-white">
-                    <h6 class="m-0 font-weight-bold">Quick Actions</h6>
-                </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="@Url.Action("Index", "MyPrograms")" class="btn btn-outline-primary text-start">
-                            <i class="fas fa-book me-2"></i>My Programs
-                        </a>
-                        <a href="@Url.Action("Create", "Prescription")" class="btn btn-outline-success text-start">
-                            <i class="fas fa-tasks me-2"></i>New Prescription
-                        </a>
-                        <a href="@Url.Action("Index", "Patient Records")" class="btn btn-outline-info text-start">
-                            <i class="fas fa-graduation-cap me-2"></i>Patient Records
-                        </a>
-                        <a href="@Url.Action("Index", "Lab Requests")" class="btn btn-outline-warning text-start">
-                            <i class="fas fa-clipboard-list me-2"></i>Lab Requests
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="col-md-2">
+        <input type="text" class="form-control" name="filters.Lastname" placeholder="Lastname" />
     </div>
-</div>
+    <div class="col-md-2">
+        <input type="text" class="form-control" name="filters.Specialty" placeholder="Specialty" />
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+    <div class="col-md-2">
+        <a asp-controller="Doctor" asp-action="Index" class="btn btn-secondary w-100">Clear</a>
+    </div>
+</form>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<table class="table table-bordered table-hover">
+    <thead class="table-primary">
+        <tr>
+            <th>Username</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Email</th>
+            <th>Specialty</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var doctor in Model.Data)
+        {
+            <tr class="@(doctor.IsDeleted ? "table-secondary text-muted" : "")">
+                <td>@doctor.Username</td>
+                <td>@doctor.Firstname</td>
+                <td>@doctor.Lastname</td>
+                <td>@doctor.Email</td>
+                <td>@doctor.Specialty</td>
+                <td>@(doctor.IsDeleted ? "Inactive" : "Active")</td>
+                <td>
+                    <a asp-controller="Doctor" asp-action="Details" asp-route-uuid="@doctor.Uuid"
+                       class="btn btn-sm btn-info">Details</a>
+                    @if (User.IsInRole("ADMIN"))
+                    {
+                        <form asp-controller="Doctor" asp-action="Delete" asp-route-uuid="@doctor.Uuid"
+                              method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Are you sure?')">
+                                Delete
+                            </button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav>
+    <ul class="pagination">
+        @if (Model.PageNumber > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-controller="Doctor" asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageNumber - 1)"
+                   asp-route-pageSize="@Model.PageSize">Previous</a>
+            </li>
+        }
+        <li class="page-item disabled">
+            <span class="page-link">Page @Model.PageNumber of @Model.TotalPages</span>
+        </li>
+        @if (Model.PageNumber < Model.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-controller="Doctor" asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)"
+                   asp-route-pageSize="@Model.PageSize">Next</a>
+            </li>
+        }
+    </ul>
+</nav>
+
+@if (ViewData["ErrorArray"] is not null)
+{
+    var errorArray = ViewData["ErrorArray"] as List<Error>;
+    if (errorArray != null)
+    {
+        foreach (var error in errorArray)
+        {
+            <div class="alert alert-danger">@error.Message</div>
+        }
+    }
+}

@@ -54,7 +54,7 @@ namespace ClinicApp.Controllers
             {
                 return View();
             }
-            return RedirectToAction("Index", "User");
+            return RedirectToAction("Index", "Doctor");
         }
 
         [HttpPost]
@@ -76,14 +76,7 @@ namespace ClinicApp.Controllers
                     return View(credentials);
                 }
 
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role.Name)
-                };
-
-                ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = _applicationService.UserService.CreateClaimsPrincipal(user);
 
                 AuthenticationProperties properties = new()
                 {
@@ -91,14 +84,13 @@ namespace ClinicApp.Controllers
                     IsPersistent = credentials.KeepLoggedIn
                 };
 
-                var principal = new ClaimsPrincipal(identity);
 
                 await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     principal,
                     properties);
 
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Doctor");
 
             } catch (Exception e)
             {
